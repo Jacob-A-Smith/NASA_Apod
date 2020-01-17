@@ -8,8 +8,6 @@ import (
 	"time"
 )
 
-// sy05dHs7csSQDyiHPfldyvgqoH5hGV9B42G0gtPn
-
 const (
 	apodHost     string = "https://api.nasa.gov/planetary/apod?"
 	apiToken     string = "api_key="
