@@ -38,7 +38,6 @@ func GetApodForDateRange(numDays int, cb func([]ApodResponse), apiKey string) {
 	wg.Add(numDays)
 
 	today := time.Now()
-	count := 0
 	for i := 0; i < numDays; i++ {
 		// check to see if this data has been requested already
 		mtx.Lock()
@@ -48,7 +47,6 @@ func GetApodForDateRange(numDays int, cb func([]ApodResponse), apiKey string) {
 			wg.Done()
 			continue
 		}
-		count++
 		nextDay := today.AddDate(0, 0, i*-1)
 		y, m, d := nextDay.Date()
 		dayStr := fmt.Sprintf("%d-%d-%d", y, int(m), d)
