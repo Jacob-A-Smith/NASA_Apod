@@ -1,10 +1,9 @@
 package main
 
 import (
-	"runtime"
 	"strconv"
 
-	apodRequester "apodRequester"
+	apodRequester "jsmith/nasa/apodRequester"
 
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
@@ -63,7 +62,7 @@ func main() {
 					numDaysEntry.SetText("")
 					return
 				}
-				apodRequester.GetApodForDateRange(int(num), update, apiKeyEntry.Text)
+				go apodRequester.GetApodForDateRange(int(num), update, apiKeyEntry.Text)
 			}),
 			widget.NewButton("Quit", func() {
 				app.Quit()
