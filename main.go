@@ -4,7 +4,7 @@ import (
 	"runtime"
 	"strconv"
 
-	apodRequester "jsmith/nasa/apodRequester"
+	apodRequester "apodRequester"
 
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
