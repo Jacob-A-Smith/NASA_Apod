@@ -13,7 +13,6 @@ import (
 )
 
 func main() {
-	runtime.GOMAXPROCS(55)
 	app := app.New()
 
 	w := app.NewWindow("Hello")
