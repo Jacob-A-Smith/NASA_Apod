@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net/url"
 	"strconv"
 
 	apodRequester "jsmith/nasa/apodRequester"
@@ -17,10 +18,14 @@ func main() {
 	w := app.NewWindow("Hello")
 	w.Resize(fyne.NewSize(1920, 1080))
 
+	titleLabel := widget.NewLabel("NASA Astronomy Picture of the Day")
 	numDaysEntry := widget.NewEntry()
 	numDaysEntry.SetPlaceHolder("Number of days...")
 	apiKeyEntry := widget.NewEntry()
 	apiKeyEntry.SetPlaceHolder("api key")
+	exitApplication := widget.NewButton("Quit", func() {
+		app.Quit()
+	})
 
 	var update func([]apodRequester.ApodResponse)
 	var showMainMenu func()
@@ -28,6 +33,15 @@ func main() {
 		wid := widget.NewForm(widget.NewFormItem(apod.Date, widget.NewButton(apod.Title, func() {
 			img, err := fyne.LoadResourceFromURLString(apod.Hdurl)
 			if err != nil {
+				u, e := url.Parse(apod.URL)
+				if e != nil {
+					return
+				}
+				resource := widget.NewHyperlink(apod.URL, u)
+				picWindow := app.NewWindow(apod.Title)
+				picWindow.Resize(fyne.NewSize(512, 512))
+				picWindow.SetContent(resource)
+				picWindow.Show()
 				return
 			}
 			resource := canvas.NewImageFromResource(img)
@@ -50,7 +64,7 @@ func main() {
 
 	showMainMenu = func() {
 		w.SetContent(widget.NewVBox(
-			widget.NewLabel("NASA Astronomy Picture of the Day"),
+			titleLabel,
 			widget.NewForm(widget.NewFormItem("Enter API key: ", apiKeyEntry)),
 			widget.NewForm(widget.NewFormItem("Enter number of days: ", numDaysEntry)),
 			widget.NewButton("Request photos", func() {
@@ -63,10 +77,13 @@ func main() {
 					return
 				}
 				go apodRequester.GetApodForDateRange(int(num), update, apiKeyEntry.Text)
+				w.SetContent(widget.NewVBox(
+					titleLabel,
+					widget.NewLabel("Processing Request..."),
+					exitApplication,
+				))
 			}),
-			widget.NewButton("Quit", func() {
-				app.Quit()
-			}),
+			exitApplication,
 		))
 	}
 
